@@ -1,6 +1,34 @@
 <template>
+  <div class="loader">
+    <p class="exclamation-mark">!</p>
+    <div class="block block-1"></div>
+    <div class="block block-2"></div>
+    <div class="block block-3"></div>
+    <div class="block block-4"></div>
+    <div class="block block-5"></div>
+    <div class="block block-6"></div>
+    <div class="block block-7"></div>
+    <div class="block block-8"></div>
+    <div class="block block-9"></div>
+    <div class="block block-10"></div>
+    <div class="block block-11"></div>
+    <div class="block block-12"></div>
+    <div class="block block-13"></div>
+    <div class="block block-14"></div>
+    <div class="block block-15"></div>
+    <div class="block block-16"></div>
+  </div>
+
   <div class="main-container">
-    <nav></nav>
+    <nav>
+      <a class="logo" href="#">art-of-yoji</a>
+      <ul class="items">
+        <li><a class="item" href="#artist"> Part I</a></li>
+        <li><a class="item" href="#artworks">Part II</a></li>
+        <li><a class="item" href="#technic">Part III</a></li>
+        <li><a class="item" href="#meca">Part IV</a></li>
+      </ul>
+    </nav>
     <div class="header">
       <img
         class="header-bg img-front"
@@ -9,7 +37,7 @@
       />
       <img
         class="header-bg img-back"
-        src="../assets/images/header.jpg"
+        src="../assets/images/header3.jpg"
         alt="main-wallpaper"
       />
       <h1 class="header-title">art of yoji</h1>
@@ -93,7 +121,7 @@
       />
     </section>
 
-    <section class="banner-three">
+    <section class="banner-three" id="technic">
       <div class="bg-banner3">
         <div class="wrapper wrapper-up"></div>
         <div class="bullet-line">
@@ -105,7 +133,7 @@
       </div>
     </section>
 
-    <section class="banner-four" id="technics">
+    <section class="banner-four">
       <div class="col-left">
         <div class="banner-four-content">
           <p class="banner-four-paragraph">
@@ -134,7 +162,7 @@
       </div>
       <div class="col-right"></div>
     </section>
-    <section class="banner-five">
+    <section class="banner-five" id="meca">
       <div class="banner-five-header">
         <svg viewBox="-100 55 800 100" id="svg">
           <path id="path" d="M9,150 q200,-120 400,0" />
@@ -142,8 +170,8 @@
             <svg
               fill="#da7888"
               version="1.1"
-              width="25px"
-              height="25px"
+              width="40px"
+              height="35px"
               viewBox="0 0 548.17 548.17"
             >
               <g>
@@ -214,7 +242,85 @@ import { onMounted, ref } from "vue";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, MotionPathPlugin);
 
+const lockScroll = () => {
+  document.body.style.overflow = "hidden";
+};
+
+const unlockScroll = () => {
+  document.body.style.overflow = "";
+};
+
 onMounted(() => {
+  lockScroll();
+  gsap.to(".exclamation-mark", {
+    fontSize: "15em",
+    delay: 0.5,
+    ease: "elastic.out(1, 0.75)",
+    duration: 0.7,
+  });
+
+  //disparition
+  gsap.to(".exclamation-mark", {
+    scale: 0,
+    opacity: 0,
+    y: 40,
+    delay: 1.8,
+    duration: 0.3,
+  });
+
+  //fondu des elements
+  gsap.to(".block", {
+    duration: 2,
+    delay: 1.9,
+    height: "0%",
+    opacity: 0,
+    from: "bottom",
+    stagger: {
+      each: 0.02,
+      from: "bottom",
+    },
+  });
+
+  const headerTl = gsap.timeline();
+
+  headerTl
+    .to(".header-title", {
+      duration: 5,
+      delay: 1.5,
+      y: -280,
+    })
+    .fromTo(
+      "nav",
+      {
+        y: -50,
+        opacity: 0,
+      },
+      {
+        duration: 2,
+        opacity: 1,
+        y: 0,
+      },
+      "-=3"
+    )
+    .to(
+      ".img-front",
+      {
+        duration: 3,
+        opacity: 0,
+      },
+      "-=3"
+    )
+
+    .to(
+      ".img-back",
+      {
+        duration: 2,
+        opacity: 1,
+        onComplete: unlockScroll,
+      },
+      "-=2"
+    );
+
   //annimation de la page artiste
 
   const bannerTl = gsap.timeline();
@@ -229,7 +335,16 @@ onMounted(() => {
       scrollTrigger: {
         trigger: ".header",
         start: "bottom center",
-        markers: true,
+
+        scrub: true,
+      },
+    })
+
+    .to("nav", {
+      backgroundColor: "black",
+      duration: 3,
+      scrollTrigger: {
+        trigger: ".banner",
         scrub: true,
       },
     })
@@ -250,11 +365,11 @@ onMounted(() => {
   const bannerTwoTl = gsap.timeline({
     scrollTrigger: {
       trigger: ".banner-two",
-      // markers: true,
+
       scrub: 0.1,
       pin: ".banner-two",
-
-      end: "120%",
+      start: "top top",
+      end: "120% top  ",
       //gestion du bg en fonction du scroll
       onUpdate: (self) => {
         const bgTwo = document.querySelector(".bg-2");
@@ -281,37 +396,29 @@ onMounted(() => {
 
   bannerTwoTl
     .to(".banner-two-title", {
-      duration: 30000,
-      z: 1000,
+      duration: 10,
+      z: 900,
       mixBlendMode: "multiply",
     })
-    .to(
-      ".banner-two-title",
-      {
-        duration: 3000,
-        backgroundColor: "transparent",
-        opacity: 1,
-      },
-      "-=6.3"
-    )
-    .to(
-      ".first-overlay-img",
-      {
-        y: "-150%",
-        x: 150,
-        rotation: 5,
-        ease: "power3.out",
-        duration: 4000,
-        opacity: 1,
-      },
-      "-=3"
-    )
+    .to(".banner-two-title", {
+      duration: 6,
+      backgroundColor: "transparent",
+      opacity: 0,
+    })
+    .to(".first-overlay-img", {
+      y: "-150%",
+      x: 150,
+      rotation: 5,
+      ease: "power3.out",
+      duration: 4,
+      opacity: 1,
+    })
     .to(".second-overlay-img", {
       y: "-140%",
       x: -180,
       rotation: -3,
       ease: "power3.in",
-      duration: 6500,
+      duration: 6,
       opacity: 1,
     })
     .to(".third-overlay-img", {
@@ -319,16 +426,16 @@ onMounted(() => {
       x: 250,
       rotation: -8,
       ease: "power3.in",
-      duration: 6500,
+      duration: 6,
       opacity: 1,
     })
     .to(
       ".banner-two-overlay",
       {
         x: "-30%",
-        duration: 10000,
+        duration: 10,
         stagger: {
-          amount: -1.5,
+          amount: 1.5,
         },
       },
       "+=2"
@@ -340,7 +447,6 @@ onMounted(() => {
     scrollTrigger: {
       trigger: ".banner-three",
       start: "center center",
-      // markers: true,
       scrub: true,
       pin: ".banner-three",
       end: "100%",
@@ -351,7 +457,7 @@ onMounted(() => {
 
   bannerThreeTl
     .to(".line", {
-      duration: 15000,
+      duration: 10,
       width: "80vw",
     })
     .to(
@@ -367,7 +473,7 @@ onMounted(() => {
       ".bg-banner3 .wrapper",
       {
         height: 0,
-        duration: 8000,
+        duration: 10,
       },
       "-=.3"
     );
@@ -427,7 +533,6 @@ onMounted(() => {
       scrollTrigger: {
         trigger: ".banner-five-header h2",
         start: "top center",
-        markers: true,
         scrub: true,
       },
     })
@@ -435,13 +540,12 @@ onMounted(() => {
     .to(
       "#missile",
       {
-        duration: 15,
+        duration: 50,
         ease: "power1.inOut",
         scrollTrigger: {
           trigger: ".banner-five-header h2",
           start: "top center",
           end: "bottom 30%",
-          markers: true,
           scrub: true,
         },
         motionPath: {
@@ -454,19 +558,15 @@ onMounted(() => {
       "-=1"
     )
 
-    .to(
-      ".slider-content",
-      {
-        duration: 5,
-        x: -200,
-        scrollTrigger: {
-          trigger: ".slider",
-          start: "-200px center",
-          scrub: true,
-        },
+    .to(".slider-content", {
+      duration: 5,
+      x: -200,
+      scrollTrigger: {
+        trigger: ".slider",
+        start: "-330px center",
+        scrub: true,
       },
-      "-=3"
-    );
+    });
 });
 </script>
 
@@ -492,7 +592,38 @@ body {
   color: #fafafa;
   display: block;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+nav {
+  position: fixed;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  gap: 50px;
+}
+
+.logo {
+  font-size: 2em;
+  color: white;
+}
+
+ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  flex-grow: 1;
+  font-size: 1.5em;
+  text-transform: uppercase;
 }
 
 /* HEADER */
@@ -505,10 +636,14 @@ body {
 .header-bg {
   width: 100%;
   height: 100vh;
-  opacity: 1;
+  opacity: 0;
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.img-front {
+  opacity: 1;
 }
 
 .header-title {
@@ -518,7 +653,7 @@ body {
   bottom: 0;
   font-family: "mgs";
   line-height: 1em;
-  z-index: 3;
+  z-index: 2;
 }
 
 /* BANNER1 YOJI SHINKAWA BIO */
@@ -567,7 +702,7 @@ body {
 
 .paragraph {
   filter: blur(7px);
-  font-size: 20px;
+  font-size: 1.6em;
   line-height: 1.8em;
   margin: 10px 20px;
   text-align: justify;
@@ -624,7 +759,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 9em;
+  font-size: 10em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: #fff;
   background-color: black;
@@ -751,7 +887,8 @@ body {
   padding: 12px 0;
   margin: 20px 0;
   line-height: 1.4em;
-  font-size: 24px;
+  font-size: 2.1em;
+
   color: #f2f2f2;
   opacity: 0.1;
   filter: blur(3px);
@@ -812,32 +949,11 @@ body {
 
 .quote {
   margin: 17px 0;
-  font-size: 3.7em;
+  font-size: 5em;
   font-weight: 900;
   line-height: 1.8em;
   overflow: hidden;
 }
-
-/* 
-.quotes::after {
-  content: "";
-  position: absolute;
-  height: 80%;
-  width: 2px;
-  background: #828282;
-  right: 0;
-  top: 25%;
-}
-
-.quotes::before {
-  content: "";
-  position: absolute;
-  height: 2px;
-  width: 80%;
-  background: #828282;
-  left: 25%;
-  bottom: 0;
-} */
 
 .banner-five-footer-img {
   width: 50%;
@@ -853,24 +969,15 @@ body {
   fill: none;
 }
 
-#div {
-  width: 120px;
-  height: 60px;
-  pointer-events: none;
-  background-color: #aa00ee;
-  text-align: center;
-  line-height: 60px;
-  position: absolute;
-  top: 30%;
-  left: 60%;
-  font-size: 32px;
+#missile {
+  z-index: 2;
 }
 
 .banner-five-header h2 {
   color: #000;
   position: absolute;
   text-transform: uppercase;
-  font-size: 6.3em;
+  font-size: 9em;
   opacity: 0.3;
   filter: blur(7px);
 }
@@ -911,7 +1018,8 @@ body {
 }
 
 .slider-content {
-  font-size: 6.3em;
+  font-size: 6.5em;
+  letter-spacing: 0.3em;
   color: black;
   white-space: nowrap;
   text-transform: uppercase;
@@ -926,5 +1034,72 @@ footer {
   width: 100%;
   font-family: "mgs";
   padding: 20px 0;
+}
+
+/* loader */
+
+.loader {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.exclamation-mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0em;
+  z-index: 2;
+  color: #e61111;
+  font-weight: 900;
+  font-family: "Tektur", cursive;
+}
+
+.block {
+  width: 100vw;
+  height: 5%;
+  background: white;
+  position: absolute;
+  left: 0;
+}
+
+.block-1 {
+  bottom: 0%;
+}
+.block-2 {
+  bottom: 5%;
+}
+.block-3 {
+  bottom: 10%;
+}
+.block-4 {
+  bottom: 15%;
+}
+.block-5 {
+  bottom: 20%;
+  height: 10%;
+}
+.block-6 {
+  bottom: 30%;
+  height: 10%;
+}
+.block-7 {
+  bottom: 40%;
+  height: 15%;
+}
+.block-8 {
+  bottom: 55%;
+  height: 20%;
+}
+
+.block-10 {
+  bottom: 70%;
+  height: 25%;
 }
 </style>
